@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import plotly.express as px
 
 # Page config
 st.set_page_config(
@@ -89,56 +90,59 @@ with tabs[0]:
             st.metric("System Uptime", ">99%", "Enterprise SLA")
             st.metric("Time to Market", "24 weeks", "With validation")
         
-        # Add a bar chart for time comparison with matplotlib
+        # Add a bar chart for time comparison with plotly
         st.subheader("⏱️ Processing Time Comparison")
         
-        fig1, ax1 = plt.subplots(figsize=(6, 4))
-        methods = ['Manual Process', 'AI Platform']
-        times = [180, 0.5]
-        colors = ['#ff6b6b', '#4ecdc4']
+        fig1 = go.Figure(data=[
+            go.Bar(
+                x=['Manual Process', 'AI Platform'],
+                y=[180, 0.5],
+                text=['180 minutes', '0.5 minutes'],
+                textposition='outside',
+                marker_color=['#ff6b6b', '#4ecdc4']
+            )
+        ])
         
-        bars = ax1.bar(methods, times, color=colors)
-        ax1.set_ylabel('Time (Minutes)', fontsize=12, fontweight='bold')
-        ax1.set_title('Processing Time per Contribution', fontsize=14)
+        fig1.update_layout(
+            yaxis_title="Time (Minutes)",
+            height=400,
+            showlegend=False,
+            template="plotly_white"
+        )
         
-        # Add value labels on bars
-        for bar, time in zip(bars, times):
-            height = bar.get_height()
-            ax1.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{time} min', ha='center', va='bottom', fontweight='bold')
-        
-        ax1.set_ylim(0, 200)
-        plt.tight_layout()
-        st.pyplot(fig1)
+        st.plotly_chart(fig1, use_container_width=True)
     
     with col2:
         st.success("**🤝 Partner-First Approach**\n\nSecure innovation partners BEFORE full build to ensure product-market fit, gain testimonials, and accelerate customer acquisition.")
         
         st.subheader("Implementation Phases")
         
-        # Create a bar chart for timeline with matplotlib
+        # Create a bar chart for timeline with plotly
         st.subheader("📅 Project Timeline")
         
-        fig2, ax2 = plt.subplots(figsize=(6, 4))
-        phases = ['Org\nSetup', 'Team\nEngage', 'Partner\nAcquisition ⭐', 
-                 'Demo\nDev', 'Full\nBuild', 'Pilot\nProgram']
+        phases = ['Org Setup', 'Team Engage', 'Partner Acquisition ⭐', 
+                 'Demo Dev', 'Full Build', 'Pilot Program']
         weeks = [1, 2, 5, 5, 13, 5]
-        colors2 = ['#6c757d', '#6c757d', '#ffd93d', '#6c757d', '#0d6efd', '#28a745']
+        colors = ['#6c757d', '#6c757d', '#ffd93d', '#6c757d', '#0d6efd', '#28a745']
         
-        bars2 = ax2.bar(phases, weeks, color=colors2)
-        ax2.set_ylabel('Duration (Weeks)', fontsize=12, fontweight='bold')
-        ax2.set_title('Phase Duration', fontsize=14)
+        fig2 = go.Figure(data=[
+            go.Bar(
+                x=phases,
+                y=weeks,
+                text=[f'{w} weeks' for w in weeks],
+                textposition='outside',
+                marker_color=colors
+            )
+        ])
         
-        # Add value labels on bars
-        for bar, week in zip(bars2, weeks):
-            height = bar.get_height()
-            ax2.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{week} weeks', ha='center', va='bottom', fontsize=10, fontweight='bold')
+        fig2.update_layout(
+            yaxis_title="Duration (Weeks)",
+            height=400,
+            showlegend=False,
+            template="plotly_white"
+        )
         
-        ax2.set_ylim(0, 15)
-        plt.xticks(rotation=0, fontsize=9)
-        plt.tight_layout()
-        st.pyplot(fig2)
+        st.plotly_chart(fig2, use_container_width=True)
 
 # Tab 2: Strategy Shift
 with tabs[1]:
@@ -151,27 +155,31 @@ with tabs[1]:
     with col1:
         st.subheader("Why Partner-First?")
         
-        # Create a visual representation of benefits with matplotlib
+        # Create a visual representation of benefits with plotly
         st.subheader("📊 Success Rate Improvement")
         
-        fig3, ax3 = plt.subplots(figsize=(6, 4))
-        benefits = ['First Client\nProbability', 'Product-Market\nFit', 'Testimonials\n& Referrals']
+        benefits = ['First Client<br>Probability', 'Product-Market<br>Fit', 'Testimonials<br>& Referrals']
         impact = [85, 90, 95]
-        colors3 = ['#ff9999', '#66b3ff', '#99ff99']
         
-        bars3 = ax3.bar(benefits, impact, color=colors3)
-        ax3.set_ylabel('Success Rate (%)', fontsize=12, fontweight='bold')
-        ax3.set_title('Impact of Partner-First Approach', fontsize=14)
+        fig3 = go.Figure(data=[
+            go.Bar(
+                x=benefits,
+                y=impact,
+                text=[f'{val}%' for val in impact],
+                textposition='outside',
+                marker_color=['#ff9999', '#66b3ff', '#99ff99']
+            )
+        ])
         
-        # Add percentage labels on bars
-        for bar, val in zip(bars3, impact):
-            height = bar.get_height()
-            ax3.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{val}%', ha='center', va='bottom', fontsize=11, fontweight='bold')
+        fig3.update_layout(
+            yaxis_title="Success Rate (%)",
+            yaxis=dict(range=[0, 100]),
+            height=400,
+            showlegend=False,
+            template="plotly_white"
+        )
         
-        ax3.set_ylim(0, 100)
-        plt.tight_layout()
-        st.pyplot(fig3)
+        st.plotly_chart(fig3, use_container_width=True)
         
         st.markdown("""
         ### Key Advantages:
@@ -218,21 +226,26 @@ with tabs[1]:
             - Case study rights
             """)
         
-        # Add a comparison chart
+        # Add a comparison chart with plotly grouped bar chart
         st.subheader("📈 Development Approach Comparison")
-        comparison = pd.DataFrame({
-            'Metric': ['Success Rate', 'Time to Revenue', 'Customer Satisfaction', 'Feature Relevance'],
-            'Traditional': [30, 12, 60, 50],
-            'Partner-First': [75, 6, 90, 95]
-        })
         
-        # Create a grouped bar chart effect
-        chart_data = pd.DataFrame({
-            'Traditional Approach': [30, 12, 60, 50],
-            'Partner-First Approach': [75, 6, 90, 95]
-        }, index=['Success Rate %', 'Months to Revenue', 'Satisfaction %', 'Feature Relevance %'])
+        metrics = ['Success Rate (%)', 'Time to Revenue (mo)', 'Satisfaction (%)', 'Feature Relevance (%)']
+        traditional = [30, 12, 60, 50]
+        partner_first = [75, 6, 90, 95]
         
-        st.dataframe(chart_data.T, use_container_width=True)
+        fig4 = go.Figure(data=[
+            go.Bar(name='Traditional', x=metrics, y=traditional, marker_color='#ff7f50'),
+            go.Bar(name='Partner-First', x=metrics, y=partner_first, marker_color='#32cd32')
+        ])
+        
+        fig4.update_layout(
+            barmode='group',
+            height=350,
+            template="plotly_white",
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        )
+        
+        st.plotly_chart(fig4, use_container_width=True)
         
         st.success("**🎯 Target:** Secure 1-2 innovation partners by Week 6")
 
