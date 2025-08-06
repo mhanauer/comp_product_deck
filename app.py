@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
 
 # Page config
 st.set_page_config(
@@ -88,33 +89,56 @@ with tabs[0]:
             st.metric("System Uptime", ">99%", "Enterprise SLA")
             st.metric("Time to Market", "24 weeks", "With validation")
         
-        # Add a simple bar chart for time comparison
+        # Add a bar chart for time comparison with matplotlib
         st.subheader("⏱️ Processing Time Comparison")
-        time_data = pd.DataFrame({
-            'Method': ['Manual Process', 'AI Platform'],
-            'Minutes': [180, 0.5]
-        })
-        st.bar_chart(time_data.set_index('Method'))
+        
+        fig1, ax1 = plt.subplots(figsize=(6, 4))
+        methods = ['Manual Process', 'AI Platform']
+        times = [180, 0.5]
+        colors = ['#ff6b6b', '#4ecdc4']
+        
+        bars = ax1.bar(methods, times, color=colors)
+        ax1.set_ylabel('Time (Minutes)', fontsize=12, fontweight='bold')
+        ax1.set_title('Processing Time per Contribution', fontsize=14)
+        
+        # Add value labels on bars
+        for bar, time in zip(bars, times):
+            height = bar.get_height()
+            ax1.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{time} min', ha='center', va='bottom', fontweight='bold')
+        
+        ax1.set_ylim(0, 200)
+        plt.tight_layout()
+        st.pyplot(fig1)
     
     with col2:
         st.success("**🤝 Partner-First Approach**\n\nSecure innovation partners BEFORE full build to ensure product-market fit, gain testimonials, and accelerate customer acquisition.")
         
         st.subheader("Implementation Phases")
-        # Create a progress timeline visualization
-        phases_data = pd.DataFrame({
-            'Phase': ['Org Setup', 'Team Engage', 'Partner Acq', 'Demo Dev', 'Full Build', 'Pilot'],
-            'Week Start': [1, 1, 2, 2, 8, 18],
-            'Duration': [1, 2, 5, 5, 13, 5]
-        })
         
-        # Create a simple Gantt-like chart
+        # Create a bar chart for timeline with matplotlib
         st.subheader("📅 Project Timeline")
-        timeline_chart = pd.DataFrame({
-            'Phase': ['1. Org Setup', '2. Team Engage', '3. Partner Acquisition ⭐', 
-                     '4. Demo Dev', '5. Full Build', '6. Pilot Program'],
-            'Weeks': [1, 2, 5, 5, 13, 5]
-        })
-        st.bar_chart(timeline_chart.set_index('Phase'))
+        
+        fig2, ax2 = plt.subplots(figsize=(6, 4))
+        phases = ['Org\nSetup', 'Team\nEngage', 'Partner\nAcquisition ⭐', 
+                 'Demo\nDev', 'Full\nBuild', 'Pilot\nProgram']
+        weeks = [1, 2, 5, 5, 13, 5]
+        colors2 = ['#6c757d', '#6c757d', '#ffd93d', '#6c757d', '#0d6efd', '#28a745']
+        
+        bars2 = ax2.bar(phases, weeks, color=colors2)
+        ax2.set_ylabel('Duration (Weeks)', fontsize=12, fontweight='bold')
+        ax2.set_title('Phase Duration', fontsize=14)
+        
+        # Add value labels on bars
+        for bar, week in zip(bars2, weeks):
+            height = bar.get_height()
+            ax2.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{week} weeks', ha='center', va='bottom', fontsize=10, fontweight='bold')
+        
+        ax2.set_ylim(0, 15)
+        plt.xticks(rotation=0, fontsize=9)
+        plt.tight_layout()
+        st.pyplot(fig2)
 
 # Tab 2: Strategy Shift
 with tabs[1]:
@@ -127,13 +151,27 @@ with tabs[1]:
     with col1:
         st.subheader("Why Partner-First?")
         
-        # Create a visual representation of benefits
-        benefits_df = pd.DataFrame({
-            'Benefit': ['First Client\nProbability', 'Product-Market\nFit', 'Testimonials\n& Referrals'],
-            'Impact': [85, 90, 95]
-        })
-        st.subheader("📊 Success Rate Improvement (%)")
-        st.bar_chart(benefits_df.set_index('Benefit'))
+        # Create a visual representation of benefits with matplotlib
+        st.subheader("📊 Success Rate Improvement")
+        
+        fig3, ax3 = plt.subplots(figsize=(6, 4))
+        benefits = ['First Client\nProbability', 'Product-Market\nFit', 'Testimonials\n& Referrals']
+        impact = [85, 90, 95]
+        colors3 = ['#ff9999', '#66b3ff', '#99ff99']
+        
+        bars3 = ax3.bar(benefits, impact, color=colors3)
+        ax3.set_ylabel('Success Rate (%)', fontsize=12, fontweight='bold')
+        ax3.set_title('Impact of Partner-First Approach', fontsize=14)
+        
+        # Add percentage labels on bars
+        for bar, val in zip(bars3, impact):
+            height = bar.get_height()
+            ax3.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{val}%', ha='center', va='bottom', fontsize=11, fontweight='bold')
+        
+        ax3.set_ylim(0, 100)
+        plt.tight_layout()
+        st.pyplot(fig3)
         
         st.markdown("""
         ### Key Advantages:
